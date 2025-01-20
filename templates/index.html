@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Episode Finder</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+  <div id="loading-overlay" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+  <h1>Random Episode Finder</h1>
+  <div style="position: relative;">
+    <input type="text" id="showInput" placeholder="Enter TV show name" autocomplete="off">
+    <ul id="autocomplete" style="display: none;"></ul>
+  </div>
+  <div>
+    <input type="text" id="keywordInput" placeholder="Enter keywords (optional)">
+  </div>
+
+  <button id="findEpisode">Get Random Episode</button>
+
+  <div class="output" id="output" style="display: none;">
+    <p id="season-episode" style="font-weight: bold; font-size: 1.2em; text-align: center;"></p> <!-- Center the season and episode text -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex-grow: 1;"> <!-- This section contains the title and synopsis -->
+            <h3>Episode Details:</h3>
+            <p><strong>Title:</strong> <span id="title"></span></p>
+            <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
+        </div>
+        <img id="poster" src="" alt="Episode Poster" style="max-width: 200px; margin-left: 20px; object-fit: cover;" /> <!-- Float image to the right -->
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+<footer>
+  <p>Powered by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
+    <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_1-8ba2ac31f354005783fab473602c34c3f4fd207150182061e425d366e4f34596.svg" alt="The Movie Database" id="tmdb-logo">
+  </a></p>
+</footer>
+
+</body>
+</html>
