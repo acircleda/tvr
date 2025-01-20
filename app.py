@@ -9,7 +9,7 @@ def home():
     return render_template('index.html')
 
 # Replace with your TMDb API key
-TMDB_API_KEY = "0223d53c31b7aa2ffc7d507b0f174d6c"
+TMDB_API_KEY = ""
 
 # Base URL for TMDb API
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
