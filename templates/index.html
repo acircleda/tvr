@@ -30,8 +30,10 @@
             <p><strong>Title:</strong> <span id="title"></span></p>
             <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
         </div>
-        <img id="poster" src="" alt="Episode Poster" style="max-width: 200px; margin-left: 20px; object-fit: cover;" /> <!-- Float image to the right -->
     </div>
+    <div id="poster-container">
+      <img id="poster" src="" alt="Episode Poster" />
+  </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>

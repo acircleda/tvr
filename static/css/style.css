@@ -59,7 +59,7 @@
       background-color: #0056b3;
     }
 
-    .output {
+   #output {
       margin-top: 20px;
       padding: 15px;
       border: 1px solid #ddd;
@@ -67,7 +67,10 @@
       border-radius: 5px;
       width: 80%;
       max-width: 600px;
+      margin-bottom: 20px; /* Add space between output and footer */
+      padding-bottom: 20px; /* Optional: Add padding for some internal space */
     }
+
     #loading-overlay {
     position: fixed;
     top: 0;
@@ -100,7 +103,6 @@
   }
 
   footer {
-  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -109,6 +111,7 @@
   text-align: center;
   padding: 10px;
   font-size: 14px;
+  margin-top: 20px; /* Ensure footer is separated from the content */
 }
 
 footer a {
@@ -123,4 +126,30 @@ footer a:hover {
 #tmdb-logo {
   width: 100px;
   vertical-align: middle;
+}
+
+#poster-container {
+  display: flex; /* Use flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically if needed */
+  width: 100%; /* Ensure container takes full width */
+  padding-bottom: 20px;
+}
+
+#poster {
+  width: 100%; /* Make image 100% of the container width */
+  max-width: 600px; /* Optional: Set a maximum width for larger screens */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure the image scales properly */
+  padding-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  #poster {
+      max-width: 100%; /* Ensure it doesn't exceed the screen width */
+      margin: 0 10px; /* Optional: Add some margin for padding */
+  }
+  #output {
+    margin-bottom: 30px; /* Add more margin on small screens if needed */
+  }
 }
