@@ -1,9 +1,22 @@
-    const showInput = document.getElementById('showInput');
-    const autocompleteList = document.getElementById('autocomplete');
-    const findEpisodeButton = document.getElementById('findEpisode');
+const showInput = document.getElementById('showInput');
+const autocompleteList = document.getElementById('autocomplete');
+const findEpisodeButton = document.getElementById('findEpisode');
+const keywordInput = document.getElementById('keywordInput');
 
-    // Fetch suggestions from TMDb as the user types
-    showInput.addEventListener('input', async () => {
+// Function to update the URL with query parameters
+function updateURL(showName, keywords = '') {
+  const url = new URL(window.location);
+  url.searchParams.set('show', showName); // Update or add the 'show' parameter
+  if (keywords) {
+    url.searchParams.set('keywords', keywords); // Update or add the 'keywords' parameter if provided
+  } else {
+    url.searchParams.delete('keywords'); // Remove the 'keywords' parameter if it's empty
+  }
+  window.history.pushState({}, '', url); // Update the URL in the browser without reloading
+}
+
+// Fetch suggestions from TMDb as the user types
+showInput.addEventListener('input', async () => {
   const query = showInput.value.trim();
   autocompleteList.innerHTML = '';
   autocompleteList.style.display = 'none';
@@ -26,13 +39,14 @@
 
     if (suggestions.length > 0) {
       autocompleteList.style.display = 'block';
-      suggestions.forEach(show => {
+      suggestions.forEach((show) => {
         const listItem = document.createElement('li');
         listItem.textContent = show.name;
         listItem.addEventListener('click', () => {
           showInput.value = show.name;
           autocompleteList.innerHTML = '';
           autocompleteList.style.display = 'none';
+          updateURL(show.name, keywordInput.value.trim()); // Update URL with the selected show and keywords
         });
         autocompleteList.appendChild(listItem);
       });
@@ -44,25 +58,28 @@
   }
 });
 
-    // Hide autocomplete when clicking outside
-    document.addEventListener('click', (event) => {
-      if (!autocompleteList.contains(event.target) && event.target !== showInput) {
-        autocompleteList.innerHTML = '';
-        autocompleteList.style.display = 'none';
-      }
-    });
+// Hide autocomplete when clicking outside
+document.addEventListener('click', (event) => {
+  if (!autocompleteList.contains(event.target) && event.target !== showInput) {
+    autocompleteList.innerHTML = '';
+    autocompleteList.style.display = 'none';
+  }
+});
 
-  // Fetch random episode when button is clicked
-  findEpisodeButton.addEventListener('click', async () => {
+// Fetch random episode when button is clicked
+findEpisodeButton.addEventListener('click', async () => {
   const showName = showInput.value.trim();
   const keywords = keywordInput.value.trim();
   const outputDiv = document.getElementById('output');
   const loadingOverlay = document.getElementById('loading-overlay'); // Reference the overlay
-  
+
   if (!showName) {
     alert('Please enter a TV show name.');
     return;
   }
+
+  // Update the URL with the show name and keywords
+  updateURL(showName, keywords);
 
   try {
     // Show the loading overlay
@@ -84,12 +101,46 @@
     // Update the remaining details
     document.getElementById('title').textContent = data.title || 'N/A';
     document.getElementById('synopsis').textContent = data.synopsis || 'No synopsis available.';
-    document.getElementById('poster').src = data.poster || '';
+    const poster = document.getElementById('poster');
+    poster.src = data.poster || '';
+    poster.style.display = data.poster ? 'block' : 'none';
+
+    // Update watch providers
+    const providersList = document.getElementById('watch-providers');
+    providersList.innerHTML = ''; // Clear existing content
+    if (data.watch_providers && data.watch_providers.length > 0) {
+      data.watch_providers.forEach((provider) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <img src="${provider.logo}" alt="${provider.name} logo">
+        `;
+        providersList.appendChild(li);
+      });
+    } else {
+      const li = document.createElement('li');
+      li.textContent = 'No watch providers available.';
+      providersList.appendChild(li);
+    }
   } catch (error) {
     alert(`Error: ${error.message}`);
     outputDiv.style.display = 'none';
   } finally {
     // Hide the loading overlay
     loadingOverlay.style.display = 'none';
+  }
+});
+
+// Pre-populate the input and fetch episode details if show and keywords are in the URL
+window.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const showName = urlParams.get('show');
+  const keywords = urlParams.get('keywords');
+
+  if (showName) {
+    showInput.value = showName; // Pre-fill the input with the show name
+    if (keywords) {
+      keywordInput.value = keywords; // Pre-fill the keywords input if present in the URL
+    }
+    findEpisodeButton.click(); // Automatically trigger the find episode action
   }
 });
