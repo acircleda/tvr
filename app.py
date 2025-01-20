@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify, render_template
 import requests
 import random
+import os
+from dotenv import load_dotenv
+project_folder = os.path.expanduser('~/')
+load_dotenv(os.path.join(project_folder, '.env'))
 
 app = Flask(__name__)
 
@@ -9,7 +13,7 @@ def home():
     return render_template('index.html')
 
 # Replace with your TMDb API key
-TMDB_API_KEY = ""
+TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
 # Base URL for TMDb API
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
