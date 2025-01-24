@@ -6,13 +6,13 @@ const keywordInput = document.getElementById('keywordInput');
 // Function to update the URL with query parameters
 function updateURL(showName, keywords = '') {
   const url = new URL(window.location);
-  url.searchParams.set('show', showName); // Update or add the 'show' parameter
+  url.searchParams.set('show', showName);  // Update or add the 'show' parameter
   if (keywords) {
-    url.searchParams.set('keywords', keywords); // Update or add the 'keywords' parameter if provided
+    url.searchParams.set('keywords', keywords);  // Update or add the 'keywords' parameter if provided
   } else {
     url.searchParams.delete('keywords'); // Remove the 'keywords' parameter if it's empty
   }
-  window.history.pushState({}, '', url); // Update the URL in the browser without reloading
+  window.history.pushState({}, '', url);  // Update the URL in the browser without reloading
 }
 
 // Fetch suggestions from TMDb as the user types
@@ -39,7 +39,7 @@ showInput.addEventListener('input', async () => {
 
     if (suggestions.length > 0) {
       autocompleteList.style.display = 'block';
-      suggestions.forEach((show) => {
+      suggestions.forEach(show => {
         const listItem = document.createElement('li');
         listItem.textContent = show.name;
         listItem.addEventListener('click', () => {
@@ -101,26 +101,7 @@ findEpisodeButton.addEventListener('click', async () => {
     // Update the remaining details
     document.getElementById('title').textContent = data.title || 'N/A';
     document.getElementById('synopsis').textContent = data.synopsis || 'No synopsis available.';
-    const poster = document.getElementById('poster');
-    poster.src = data.poster || '';
-    poster.style.display = data.poster ? 'block' : 'none';
-
-    // Update watch providers
-    const providersList = document.getElementById('watch-providers');
-    providersList.innerHTML = ''; // Clear existing content
-    if (data.watch_providers && data.watch_providers.length > 0) {
-      data.watch_providers.forEach((provider) => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <img src="${provider.logo}" alt="${provider.name} logo">
-        `;
-        providersList.appendChild(li);
-      });
-    } else {
-      const li = document.createElement('li');
-      li.textContent = 'No watch providers available.';
-      providersList.appendChild(li);
-    }
+    document.getElementById('poster').src = data.poster || '';
   } catch (error) {
     alert(`Error: ${error.message}`);
     outputDiv.style.display = 'none';
@@ -137,10 +118,10 @@ window.addEventListener('DOMContentLoaded', () => {
   const keywords = urlParams.get('keywords');
 
   if (showName) {
-    showInput.value = showName; // Pre-fill the input with the show name
+    showInput.value = showName;  // Pre-fill the input with the show name
     if (keywords) {
-      keywordInput.value = keywords; // Pre-fill the keywords input if present in the URL
+      keywordInput.value = keywords;  // Pre-fill the keywords input if present in the URL
     }
-    findEpisodeButton.click(); // Automatically trigger the find episode action
+    findEpisodeButton.click();  // Automatically trigger the find episode action
   }
 });

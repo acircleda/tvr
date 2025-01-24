@@ -1,232 +1,171 @@
- body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      flex-direction: column;
-    }
-
-    h1 {
-      color: #444;
-    }
-
-    h1 a {
-      text-decoration: none; /* Remove underline by default */
-      color: #444; /* Set the default color */
-      transition: color 0.3s ease; /* Smooth transition for color changes */
-    }
-    
-    h1 a:hover {
-      text-decoration: underline; /* Add underline on hover */
-      color: #444; /* Change color on hover */
-    }
-    
-    h1 a:focus, h1 a:active {
-      color: #444; /* Maintain the original color after clicking */
-      text-decoration: none; /* Remove underline when clicked or focused */
-    }
-
-    input {
-      padding: 10px;
-      width: 300px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 150px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #fff;
-      width: 300px;
-      position: absolute;
-      z-index: 1000;
-    }
-
-    li {
-      padding: 8px 10px;
-      cursor: pointer;
-    }
-
-    li:hover {
-      background-color: #f0f0f0;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-   #output {
-      min-height: calc(100vh - 55px);
-      margin-top: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      background-color: #fff;
-      border-radius: 5px;
-      width: 80%;
-      max-width: 600px;
-    }
-
-    #season-episode {
-      font-weight: bold;
-      font-size: 1.5em;
-      text-align: center;
-    }
-
-    #loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .spinner {
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #222;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  font-size: 14px;
-  margin-top: 20px; /* Ensure footer is separated from the content */
-  z-index: 1000;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-footer a {
-  color: #1db7ff;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
-#tmdb-logo {
-  width: 100px;
-  vertical-align: middle;
-}
-
-#justwatch-logo {
-  width: 100px;
-  vertical-align: middle;
-  padding-bottom: 10px;
-}
-
-#poster-container {
-  display: flex; /* Use flexbox for centering */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically if needed */
-  width: 100%; /* Ensure container takes full width */
-  padding-bottom: 20px;
-}
-
-#poster {
-  width: 100%; /* Make image 100% of the container width */
-  max-width: 600px; /* Optional: Set a maximum width for larger screens */
-  height: auto; /* Maintain aspect ratio */
-  object-fit: cover; /* Ensure the image scales properly */
-  padding-bottom: 20px;
-}
-
-/* Watch container */
-.watch-container {
-  margin-top: 15px;
-}
-
-.watch-container h3 {
-  margin-bottom: 10px;
-  font-size: 1.2em;
+h1 {
   color: #444;
 }
 
-/* Watch provider list styling */
-#watch-providers {
-  list-style-type: none;
+h1 a {
+  text-decoration: none; /* Remove underline by default */
+  color: #444; /* Set the default color */
+  transition: color 0.3s ease; /* Smooth transition for color changes */
+}
+
+h1 a:hover {
+  text-decoration: underline; /* Add underline on hover */
+  color: #444; /* Change color on hover */
+}
+
+h1 a:focus, h1 a:active {
+  color: #444; /* Maintain the original color after clicking */
+  text-decoration: none; /* Remove underline when clicked or focused */
+}
+
+input {
   padding: 10px;
-  margin: 10px;
+  width: 300px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.watch-container ul {
-  list-style: none; /* Reset list style */
-  padding: 10px; /* Add some spacing for better appearance */
-  margin: 10px; /* Separate from other elements */
-  border: none; /* Remove inherited border */
-  width: auto; /* Make image 100% of the container width */
-  height: auto; /* Maintain aspect ratio */
-  position: relative;
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+  width: 300px;
+  position: absolute;
+  z-index: 1000;
 }
 
-#watch-providers li {
-  display: inline;
-  align-items: center;
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 20px;
+li {
+  padding: 8px 10px;
+  cursor: pointer;
 }
 
-#watch-providers li img {
-  width: 50px;
-  height: 50px;
-  margin-right: 8px;
-  border-radius: 4px;
+li:hover {
+  background-color: #f0f0f0;
 }
 
-#watch-providers li:hover {
-  background-color: transparent;
-  cursor: default;
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#output {
+  min-height: calc(100vh - 55px);
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 600px;
+}
+
+#loading-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: 9999;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.spinner {
+border: 6px solid #f3f3f3;
+border-top: 6px solid #3498db;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+0% {
+  transform: rotate(0deg);
+}
+100% {
+  transform: rotate(360deg);
+}
+}
+
+footer {
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+background-color: #222;
+color: white;
+text-align: center;
+padding: 10px;
+font-size: 14px;
+margin-top: 20px; /* Ensure footer is separated from the content */
+}
+
+footer a {
+color: #1db7ff;
+text-decoration: none;
+}
+
+footer a:hover {
+text-decoration: underline;
+}
+
+#tmdb-logo {
+width: 100px;
+vertical-align: middle;
+}
+
+#poster-container {
+display: flex; /* Use flexbox for centering */
+justify-content: center; /* Center horizontally */
+align-items: center; /* Center vertically if needed */
+width: 100%; /* Ensure container takes full width */
+padding-bottom: 20px;
+}
+
+#poster {
+width: 100%; /* Make image 100% of the container width */
+max-width: 600px; /* Optional: Set a maximum width for larger screens */
+height: auto; /* Maintain aspect ratio */
+object-fit: cover; /* Ensure the image scales properly */
+padding-bottom: 20px;
 }
 
 @media (max-width: 768px) {
-  #poster {
-      max-width: 100%; /* Ensure it doesn't exceed the screen width */
-      margin: 0 10px; /* Optional: Add some margin for padding */
-  }
-  #output {
-    margin-bottom: 30px; /* Add more margin on small screens if needed */
-  }
+#poster {
+  max-width: 100%; /* Ensure it doesn't exceed the screen width */
+  margin: 0 10px; /* Optional: Add some margin for padding */
+}
+#output {
+margin-bottom: 30px; /* Add more margin on small screens if needed */
+}
 }

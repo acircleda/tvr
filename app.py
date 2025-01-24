@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 project_folder = os.path.expanduser('~/')
 load_dotenv(os.path.join(project_folder, '.env'))
 
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -14,6 +15,7 @@ def home():
 
 # Replace with your TMDb API key
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
+
 
 # Base URL for TMDb API
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
@@ -105,35 +107,13 @@ def filter_shows():
     if 'still_path' in random_episode:
         poster_image_url = f"https://image.tmdb.org/t/p/w500{random_episode['still_path']}"
 
-# Fetch watch providers for the show
-    watch_providers_response = requests.get(
-        f"{TMDB_TV_DETAILS_URL}/{show_id}/watch/providers",
-        params={'api_key': TMDB_API_KEY}
-    )
-    
-    # Extract watch providers for the US (or adjust country as needed)
-    country_code = 'US'  # You can make this dynamic based on user location
-    #providers = watch_providers_data.get('results', {}).get(country_code, {}).get('flatrate', [])
-    #print(providers)
-    #provider_names = [provider['provider_name'] for provider in providers]
-    provider_names = []
-    if watch_providers_response.status_code == 200:
-        providers_data = watch_providers_response.json().get("results", {}).get(country_code, {}).get("flatrate", [])
-        provider_names = [
-            {
-                "name": provider["provider_name"],
-                "logo": f"https://image.tmdb.org/t/p/w500{provider['logo_path']}"
-            } for provider in providers_data
-        ]
-
     return jsonify({
         'show': details_data['name'],
         'season': random_episode['season_number'],
         'episode': random_episode['episode_number'],
         'title': random_episode['name'],
         'synopsis': random_episode.get('overview', 'No synopsis available.'),
-        'poster': poster_image_url,  # Include the poster URL if available
-        'watch_providers': provider_names  # List of watch providers
+        'poster': poster_image_url  # Include the poster URL if available
     })
 
 if __name__ == '__main__':
