@@ -108,7 +108,7 @@ def ping_self():
     """Periodically pings the home route to prevent the service from sleeping."""
     while True:
         try:
-            requests.get("http://127.0.0.1:5000/")
+            requests.get("http://0.0.0.0:10000/?show=Futurama")
         except Exception as e:
             print(f"Failed to ping self: {e}")
         threading.Timer(600, ping_self).start()  # Schedule the next ping in 10 minutes
