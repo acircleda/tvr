@@ -2,10 +2,11 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import random
 import os
+import threading
 from dotenv import load_dotenv
+
 project_folder = os.path.expanduser('~/')
 load_dotenv(os.path.join(project_folder, '.env'))
-
 
 app = Flask(__name__)
 
@@ -16,12 +17,10 @@ def home():
 # Replace with your TMDb API key
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
 
-
 # Base URL for TMDb API
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 TMDB_API_URL = 'https://api.themoviedb.org/3/search/tv'
 TMDB_TV_DETAILS_URL = 'https://api.themoviedb.org/3/tv'
-
 
 @app.route('/autocomplete', methods=['GET'])
 def autocomplete():
@@ -29,14 +28,10 @@ def autocomplete():
     if not query:
         return jsonify([])  # Return an empty list if no query is provided
 
-    # Construct the URL for the TMDb API with the query and your API key
     url = f"{TMDB_API_URL}?api_key={TMDB_API_KEY}&query={query}"
-
-    # Make the GET request to TMDb
     response = requests.get(url)
     data = response.json()
 
-    # Check if the response contains results
     if 'results' in data:
         tv_shows = [{'name': show['name']} for show in data['results']]
         return jsonify(tv_shows)
@@ -51,7 +46,6 @@ def filter_shows():
     if not show_name:
         return jsonify({'error': 'Please provide a show name.'}), 400
 
-    # Search for the show using TMDb API
     search_response = requests.get(
         TMDB_API_URL,
         params={
@@ -65,10 +59,8 @@ def filter_shows():
     if 'results' not in search_data or len(search_data['results']) == 0:
         return jsonify({'error': 'No shows found for the given name.'}), 404
 
-    # Extract the most relevant show ID
     show_id = search_data['results'][0]['id']
 
-    # Fetch details of the selected show
     details_response = requests.get(
         f"{TMDB_TV_DETAILS_URL}/{show_id}",
         params={'api_key': TMDB_API_KEY}
@@ -78,7 +70,6 @@ def filter_shows():
     if 'episodes' not in details_data and 'seasons' not in details_data:
         return jsonify({'error': 'No episodes found for the selected show.'}), 404
 
-    # Extract episodes
     all_episodes = []
     for season in details_data.get('seasons', []):
         season_number = season['season_number']
@@ -89,7 +80,6 @@ def filter_shows():
         season_details = season_details_response.json()
         all_episodes.extend(season_details.get('episodes', []))
 
-    # Filter episodes by keywords
     keyword_list = [k.strip().lower() for k in keywords.split(',') if k.strip()]
     filtered_episodes = [
         episode for episode in all_episodes
@@ -99,22 +89,30 @@ def filter_shows():
     if not filtered_episodes:
         return jsonify({'error': 'No episodes matched the given keywords.'}), 404
 
-    # Select a random episode
     random_episode = random.choice(filtered_episodes)
-
-    # Get the poster image for the episode, if available
     poster_image_url = None
-    if 'still_path' in random_episode:
+    if 'still_path' in random_episode and random_episode['still_path']:
         poster_image_url = f"https://image.tmdb.org/t/p/w500{random_episode['still_path']}"
-
+    
     return jsonify({
         'show': details_data['name'],
         'season': random_episode['season_number'],
         'episode': random_episode['episode_number'],
         'title': random_episode['name'],
         'synopsis': random_episode.get('overview', 'No synopsis available.'),
-        'poster': poster_image_url  # Include the poster URL if available
+        'poster': poster_image_url
     })
 
+def ping_self():
+    """Periodically pings the home route to prevent the service from sleeping."""
+    while True:
+        try:
+            requests.get("http://127.0.0.1:5000/")
+        except Exception as e:
+            print(f"Failed to ping self: {e}")
+        threading.Timer(600, ping_self).start()  # Schedule the next ping in 10 minutes
+        break
+
 if __name__ == '__main__':
+    threading.Thread(target=ping_self, daemon=True).start()  # Start the self-ping thread
     app.run(debug=True)

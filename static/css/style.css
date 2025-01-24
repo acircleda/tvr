@@ -31,6 +31,27 @@ h1 a:focus, h1 a:active {
   text-decoration: none; /* Remove underline when clicked or focused */
 }
 
+#logo {
+  text-align: center;
+}
+
+#logo img {
+  padding:0;
+  margin: 0;
+  align-items: "middle";
+}
+
+#logo a {
+  text-decoration: none; /* Remove underline by default */
+  text-align: center;
+  color: #444; /* Set the default color */
+  transition: color 0.3s ease; /* Smooth transition for color changes */
+}
+
+#logo a:hover {
+  text-decoration: underline; /* Add underline on hover */
+  color: #444; /* Change color on hover */
+}
 input {
   padding: 10px;
   width: 300px;
@@ -119,15 +140,19 @@ animation: spin 1s linear infinite;
 
 footer {
 position: fixed;
+flex-shrink: 0;
+display:block;
 bottom: 0;
 left: 0;
 width: 100%;
 background-color: #222;
 color: white;
 text-align: center;
-padding: 10px;
+padding: 10px 10px 10px 10px;
+box-sizing: border-box;
 font-size: 14px;
-margin-top: 20px; /* Ensure footer is separated from the content */
+margin-top: 20px;
+min-height: 70px;
 }
 
 footer a {
@@ -137,6 +162,45 @@ text-decoration: none;
 
 footer a:hover {
 text-decoration: underline;
+}
+
+.footer-section {
+  flex: 1;
+  text-align: center;
+}
+
+.footer-section.about {
+  text-align: left;
+}
+
+.footer-section.about ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  max-height: auto;
+}
+
+.footer-section.about li {
+  margin-bottom: 5px;
+  cursor: default;
+  padding:0;
+}
+
+.footer-section.about li:hover {
+  background-color: transparent;
+}
+
+.footer-section.tmdb {
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 20px;
+}
+
+
+.footer-section.buy-coffee {
+  text-align: right;
 }
 
 #tmdb-logo {
@@ -160,6 +224,15 @@ object-fit: cover; /* Ensure the image scales properly */
 padding-bottom: 20px;
 }
 
+#spacer {
+  height: 25px;
+}
+
+#bmc-wbtn {
+  width: 50px !important;
+  height: 50px !important;
+}
+
 @media (max-width: 768px) {
 #poster {
   max-width: 100%; /* Ensure it doesn't exceed the screen width */
@@ -168,4 +241,16 @@ padding-bottom: 20px;
 #output {
 margin-bottom: 30px; /* Add more margin on small screens if needed */
 }
+footer {
+  flex-direction: column;
+  text-align: center;
+    display: grid;
+    grid-auto-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.footer-section {
+  margin-bottom: 10px;
+}
+
 }

@@ -101,7 +101,13 @@ findEpisodeButton.addEventListener('click', async () => {
     // Update the remaining details
     document.getElementById('title').textContent = data.title || 'N/A';
     document.getElementById('synopsis').textContent = data.synopsis || 'No synopsis available.';
-    document.getElementById('poster').src = data.poster || '';
+
+    // Handle missing images with an onerror fallback
+    const poster = document.getElementById('poster');
+    poster.src = data.poster || '/static/missing.png';
+    poster.onerror = () => {
+      poster.src = '/static/missing.png'; // Fallback to the missing image
+    };
   } catch (error) {
     alert(`Error: ${error.message}`);
     outputDiv.style.display = 'none';
