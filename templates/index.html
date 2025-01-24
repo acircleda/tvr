@@ -23,25 +23,18 @@
   <button id="findEpisode">Get Random Episode</button>
 
   <div class="output" id="output" style="display: none;">
-    <p id="season-episode" class="season-episode"></p>
-    <div class="details-container">
-        <div class="text-details">
+    <p id="season-episode" style="font-weight: bold; font-size: 1.2em; text-align: center;"></p> <!-- Center the season and episode text -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="flex-grow: 1;"> <!-- This section contains the title and synopsis -->
             <h3>Episode Details:</h3>
             <p><strong>Title:</strong> <span id="title"></span></p>
             <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
         </div>
-        <div class="poster-container">
-            <img id="poster" src="" alt="Episode Poster" />
-        </div>
     </div>
-    <div class="watch-container">
-        <h3>Where to Stream</h3>
-        <ul id="watch-providers"></ul>
-        <span style="font-size: .8em;">Watch provider data from <a href="https://www.justwatch.com/", target="_blank"><img src = "https://www.themoviedb.org/assets/2/v4/logos/justwatch-c2e58adf5809b6871db650fb74b43db2b8f3637fe3709262572553fa056d8d0a.svg" alt="JustWatch" id="justwatch-logo">
-        </a></span>
-    </div>
+    <div id="poster-container">
+      <img id="poster" src="" alt="Episode Poster" />
+  </div>
 </div>
-
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
