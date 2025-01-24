@@ -104,6 +104,16 @@ def filter_shows():
         'poster': poster_image_url
     })
 
+def ping_self():
+    """Periodically pings the home route to prevent the service from sleeping."""
+    while True:
+        try:
+            requests.get("http://127.0.0.1:5000/")
+        except Exception as e:
+            print(f"Failed to ping self: {e}")
+        threading.Timer(600, ping_self).start()  # Schedule the next ping in 10 minutes
+        break
+
 if __name__ == '__main__':
     threading.Thread(target=ping_self, daemon=True).start()  # Start the self-ping thread
     app.run(debug=True)
