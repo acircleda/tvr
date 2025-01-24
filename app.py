@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import random
 import os
+import threading
 from dotenv import load_dotenv
 
 project_folder = os.path.expanduser('~/')
@@ -104,4 +105,5 @@ def filter_shows():
     })
 
 if __name__ == '__main__':
+    threading.Thread(target=ping_self, daemon=True).start()  # Start the self-ping thread
     app.run(debug=True)
