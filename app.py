@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import random
 import os
-import threading
 from dotenv import load_dotenv
 
 project_folder = os.path.expanduser('~/')
@@ -90,10 +89,11 @@ def filter_shows():
         return jsonify({'error': 'No episodes matched the given keywords.'}), 404
 
     random_episode = random.choice(filtered_episodes)
+
     poster_image_url = None
     if 'still_path' in random_episode and random_episode['still_path']:
         poster_image_url = f"https://image.tmdb.org/t/p/w500{random_episode['still_path']}"
-    
+
     return jsonify({
         'show': details_data['name'],
         'season': random_episode['season_number'],
@@ -103,16 +103,5 @@ def filter_shows():
         'poster': poster_image_url
     })
 
-def ping_self():
-    """Periodically pings the home route to prevent the service from sleeping."""
-    while True:
-        try:
-            requests.get("http://127.0.0.1:5000/")
-        except Exception as e:
-            print(f"Failed to ping self: {e}")
-        threading.Timer(600, ping_self).start()  # Schedule the next ping in 10 minutes
-        break
-
 if __name__ == '__main__':
-    threading.Thread(target=ping_self, daemon=True).start()  # Start the self-ping thread
     app.run(debug=True)
