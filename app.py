@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, render_template
 import requests
 import random
 import os
-import threading
 from dotenv import load_dotenv
 
 project_folder = os.path.expanduser('~/')
@@ -13,6 +12,14 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
 
 # Replace with your TMDb API key
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
@@ -73,6 +80,11 @@ def filter_shows():
     all_episodes = []
     for season in details_data.get('seasons', []):
         season_number = season['season_number']
+
+        # Skip invalid seasons (NULL, N/A, or None)
+        if not isinstance(season_number, int) or season_number <= 0:
+            continue
+
         season_details_response = requests.get(
             f"{TMDB_TV_DETAILS_URL}/{show_id}/season/{season_number}",
             params={'api_key': TMDB_API_KEY}
@@ -104,16 +116,5 @@ def filter_shows():
         'poster': poster_image_url
     })
 
-def ping_self():
-    """Periodically pings the home route to prevent the service from sleeping."""
-    while True:
-        try:
-            requests.get("http://0.0.0.0:10000/?show=Futurama")
-        except Exception as e:
-            print(f"Failed to ping self: {e}")
-        threading.Timer(600, ping_self).start()  # Schedule the next ping in 10 minutes
-        break
-
 if __name__ == '__main__':
-    threading.Thread(target=ping_self, daemon=True).start()  # Start the self-ping thread
     app.run(debug=True)

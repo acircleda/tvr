@@ -1,85 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="description" content="Easily choose random episodes from your favorite TV shows.>
+    {% include 'gtag.html' %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Easily choose random episodes from your favorite TV shows.">
     <meta name="keywords" content="random episode finder, TV shows, watch TV shows, random episodes, streaming, TV show discovery">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>pickmy.show Random Episode Finder</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
+    <title>pickmy.show Random Episode Finder</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
 
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "pickmy.show Random Episode Finder",
-      "description": "Discover random episodes from your favorite TV shows.",
-      "url": "http://www.pickmy.show",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "http://www.pickmy.show?show=Futurama",
-        "query-input": "required name=search_term"
-      }
-    }
-    </script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "pickmy.show Random Episode Finder",
+          "description": "Discover random episodes from your favorite TV shows.",
+          "url": "http://www.pickmy.show",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "http://www.pickmy.show?show=Futurama",
+            "query-input": "required name=search_term"
+          }
+        }
+        </script>
+
 </head>
-
 <body>
-  <div id="loading-overlay" style="display: none;">
-    <div class="spinner"></div>
-  </div>
-  <div id="logo">
-    <a href="/"><img src="{{url_for('static', filename='logo.svg')}}" alt="pickmy.show logo"/></a>
-    <p><a href="/">Random Episode Finder</a></p>
-  </div>
-  <div style="position: relative;">
-    <input type="text" id="showInput" placeholder="Enter TV show name" autocomplete="off">
-    <ul id="autocomplete" style="display: none;"></ul>
-  </div>
-  <div>
-    <input type="text" id="keywordInput" placeholder="Enter keywords (optional, comma-separated)">
-  </div>
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+      </div>
+    <main>
+        <div id="content-wrapper">
+            <div id="logo">
+                <a href="/"><img src="{{url_for('static', filename='logo.svg')}}" alt="pickmy.show logo"/></a>
+                <p><a href="/">Random Episode Finder</a></p>
+            </div>
 
-  <button id="findEpisode">Get Random Episode</button>
+            <div id="input-container">
+                <div id="input-container-show">
+                    <input type="text" id="showInput" placeholder="Enter TV show name" autocomplete="off">
+                    <ul id="autocomplete" style="display: none;"></ul>
+                    <input type="text" id="keywordInput" placeholder="Enter keywords (optional, comma-separated)">
+                    <div>
+                        <button id="findEpisode">Get Random Episode</button>
+                    </div>
+                </div>
+            </div>
 
-  <div class="output" id="output" style="display: none;">
-    <p id="season-episode" style="font-weight: bold; font-size: 1.2em; text-align: center;"></p> <!-- Center the season and episode text -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div style="flex-grow: 1;"> <!-- This section contains the title and synopsis -->
-            <h3>Episode Details:</h3>
-            <p><strong>Title:</strong> <span id="title"></span></p>
-            <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
+            <div class="output" id="output" style="display: none;">
+                <p id="season-episode"></p>
+                <div id="details">
+                    <div style="flex-grow: 1;">
+                        <h3>Episode Details:</h3>
+                        <p><strong>Title:</strong> <span id="title"></span></p>
+                        <p><strong>Synopsis:</strong> <span id="synopsis"></span></p>
+                    </div>
+                </div>
+                <div id="poster-container">
+                  <img id="poster" src="" alt="Episode Poster" />
+              </div>
         </div>
-    </div>
-    <div id="poster-container">
-      <img id="poster" src="" alt="Episode Poster" />
-  </div>
-</div>
-<div id="spacer"> </div>
-
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-
-<footer>
-  <div class="footer-section about">
-    <ul>
-      <li><a href="/about">About</a></li>
-      <li><a href="/privacy">Privacy Policy</a></li>
-    </ul>
-  </div>
-  
-  <div class="footer-section tmdb">
-    Powered by 
-    <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">
-      <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_1-8ba2ac31f354005783fab473602c34c3f4fd207150182061e425d366e4f34596.svg" 
-           alt="The Movie Database" id="tmdb-logo">
-    </a>
-  </div>
-  
-  <div class="footer-section buy-coffee">
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="pickmyshow" data-description="Support maintenance of pickmy.show!" data-message="" data-color="#007bffff" data-position="Right" data-x_margin="12" data-y_margin="12"></script>
-  </div>
-</footer>
-
+    </main>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <footer>{% include 'footer.html' %}</footer>
 </body>
 </html>
