@@ -75,7 +75,11 @@ main {
     max-width: 100%;
     height: auto;
     padding-top: 10px;
-    margin-bottom: -10px;
+    margin-bottom: -20px;
+}
+
+#logo p {
+    padding-bottom: 20px;
 }
 
 #input-container {
@@ -87,7 +91,7 @@ main {
 
 #input-container-show input {
     padding: 10px;
-    width: 400px;
+    width: 300px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -127,7 +131,7 @@ main {
   
   #input-container button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #17466bff;
     color: white;
     border: none;
     border-radius: 5px;
@@ -219,14 +223,18 @@ footer {
 
 #footer-about a {
     text-decoration: none;
-    color: #007BFF;
+    color: #3DE5EE;
     transition: color 0.3s ease; 
   }
   
 #logo a:hover {
     text-decoration: none; 
-    color: #007BFF;
+    color: #3DE5EE;
   }
+
+#tmd {
+    font-size: .8em;
+}
 
 #tmdb-logo {
     width: 150px;
@@ -240,9 +248,10 @@ footer div {
     align-content: center;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     footer {
         flex-direction: column;
+        position: relative;
     }
 
     footer div:nth-child(1) {
@@ -255,5 +264,19 @@ footer div {
 
     footer div:nth-child(3) {
         order: 1;
+        justify-content: right;
     }
+    #input-container {
+        width: 100%;
+        font-size: .9em;
+    }
+    #tmdb-logo {
+        width: 100px;
+    }
+    #bmc-wbtn {
+        position: relative !important;
+        margin-bottom: -100px !important;
+        transform: translate(400%, -100%) !important;
+    }
+    
 }

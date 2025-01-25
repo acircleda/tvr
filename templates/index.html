@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Easily choose random episodes from your favorite TV shows.">
     <meta name="keywords" content="random episode finder, TV shows, watch TV shows, random episodes, streaming, TV show discovery">
-    <title>pickmy.show Random Episode Finder</title>
+    <title>Random.Ep A Random TV Series Episode Selector</title>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
@@ -15,12 +15,12 @@
         {
           "@context": "https://schema.org",
           "@type": "WebPage",
-          "name": "pickmy.show Random Episode Finder",
+          "name": "Random.Ep A Random TV Series Episode Selector",
           "description": "Discover random episodes from your favorite TV shows.",
-          "url": "http://www.pickmy.show",
+          "url": "http://www.random.ep",
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "http://www.pickmy.show?show=Futurama",
+            "target": "http://www.andom.ep?show=Futurama",
             "query-input": "required name=search_term"
           }
         }
@@ -33,10 +33,7 @@
       </div>
     <main>
         <div id="content-wrapper">
-            <div id="logo">
-                <a href="/"><img src="{{url_for('static', filename='logo.svg')}}" alt="pickmy.show logo"/></a>
-                <p><a href="/">Random Episode Finder</a></p>
-            </div>
+            {% include 'logo.html' %}
 
             <div id="input-container">
                 <div id="input-container-show">
