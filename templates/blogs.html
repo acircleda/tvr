@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Blog Posts</title>
+</head>
+<body>
+    <h1>Blog Posts</h1>
+    <ul>
+        {% for blog in blogs %}
+            <li><a href="{{ url_for('view_blog', blog_name=blog) }}">{{ blog.replace('.html', '').replace('_', ' ') }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

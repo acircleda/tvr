@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include 'gtag.html' %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'head.html' %}
     <title>Privacy Policy for Random.Ep A Random TV Series Episode Selector</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
 
 </head>
 <body>
@@ -21,7 +16,7 @@
         </div>
     </main>
  
-    <footer>{% include 'footer.html' %}</footer>
+    {% include 'footer.html' %}
 
 
 </body>

@@ -1,30 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include 'gtag.html' %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Easily choose random episodes from your favorite TV shows.">
+    {% include 'head.html' %}
     <meta name="keywords" content="random episode finder, TV shows, watch TV shows, random episodes, streaming, TV show discovery">
     <title>Shuffle.Show: A Random TV Series Episode Selector</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,300" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='favicon.ico')}}">
-
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "Shuffle.Show: A Random TV Series Episode Selector",
-          "description": "Discover random episodes from your favorite TV shows.",
-          "url": "http://www.shuffle.show",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": "http://www.shuffle.show?show=Futurama",
-            "query-input": "required name=search_term"
-          }
-        }
-        </script>
 
 </head>
 <body>
@@ -58,9 +37,25 @@
                 <div id="poster-container">
                   <img id="poster" src="" alt="Episode Poster" />
               </div>
+              <div id="episode-link" style="display: none;"></div>
         </div>
-    </main>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-    <footer>{% include 'footer.html' %}</footer>
+
+        <div id="blog-list">
+            <h2>Recent Blog Posts</h2>
+            
+                {% for post in recent_posts %}
+                <div class="post-list-container">
+                    <div class="post-list-container-image">
+                        <img src = "{{ post['image_url'] }}" />
+                    </div>
+                    <div class="post-list-container-title">
+                            <a href="/blog/{{ post['file_name'] }}">{{ post['blog_title'] }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            
+        </div>
+
+    {% include 'footer.html' %}
 </body>
 </html>

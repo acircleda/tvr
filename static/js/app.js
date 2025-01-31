@@ -108,6 +108,16 @@ findEpisodeButton.addEventListener('click', async () => {
     poster.onerror = () => {
       poster.src = '/static/missing.png'; // Fallback to the missing image
     };
+
+    // Add "Link to episode" functionality
+    const episodeLinkElement = document.getElementById('episode-link');
+    if (data.episode_link) {
+      episodeLinkElement.style.display = 'block';
+      episodeLinkElement.innerHTML = `<a href="${data.episode_link}" target="_blank">View episode details on TMDB</a><br/>
+      <a href="${data.series_link}" target="_blank">View series details on TMDB</a>`;
+    } else {
+      episodeLinkElement.style.display = 'none';
+    }
   } catch (error) {
     alert(`Error: ${error.message}`);
     outputDiv.style.display = 'none';

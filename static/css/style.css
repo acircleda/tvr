@@ -11,6 +11,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
+    background-color: #f4f4f4;
 }
 
 main {
@@ -138,6 +139,11 @@ main {
     cursor: pointer;
     clear:both;
     font-size: 1em;
+    transition: background-color 0.5s ease; 
+  }
+
+  #input-container button:hover {
+    background-color: #3DE5EE;
   }
 
 #output {
@@ -190,6 +196,17 @@ main {
     padding-bottom: 20px;
 }
 
+#episode-link a {
+    text-align: center;
+    font-size: 1em;
+    color: #444;
+    transition: color 0.3s ease; 
+  }
+  
+#episode-link a:hover { 
+    color: #3DE5EE;
+  }
+
 #about {
     font-size: 1em;
     text-align: left;
@@ -203,6 +220,111 @@ main {
 #about p {
     margin-bottom: 15px;
 }
+
+#back a {
+    text-align: center;
+    font-size: .8em;
+    color: #17456A;
+    transition: color 0.3s ease; 
+  }
+  
+#back a:hover { 
+    color: #3DE5EE;
+  }
+
+#blog-body{
+    text-align: left;
+}
+
+.post-list-container {
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    flex-direction: row;
+}
+
+.post-list-container-image {
+    width: 20%;
+    float: left;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
+
+.post-list-container-image img {
+    width: 50px;
+    height: 50px;
+    object-fit: fill;
+}
+
+.post-list-container-title {
+    width: 75%;
+    text-align: left;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    float: left;
+}
+
+#blog-body img{
+    float: right;
+    margin-left: 20px;
+    margin-top: 100px;
+    height: 300px;
+}
+
+#blog-body h1 {
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 1.8em;
+    color: #444;
+}
+
+#blog-body h2 {
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 1.2em;
+    color: #17456A;
+    font-weight: bold;
+}
+
+#blog-body p{
+    margin-bottom: 15px;
+}
+
+#blog-list {
+    margin-top:50px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    min-height: 400px;
+    background: #fff;
+}
+
+#blog-list h2 {
+    margin-bottom: 15px;
+    margin-top: 5px;
+    font-size: 1.5em;
+    color: #444;
+}
+
+#blog-list ul {
+    list-style: none;
+    text-align: left;
+    padding: 10px;
+    margin-left: 10px;
+}
+#blog-list li {
+    margin-bottom: 5px;
+}
+
+#blog-list a {
+    text-align: center;
+    font-size: 1em;
+    color: #17456A;
+    transition: color 0.3s ease; 
+  }
+  
+#blog-list a:hover { 
+    color: #3DE5EE;
+  }
 
 footer {
     display: flex;
@@ -278,5 +400,9 @@ footer div {
         margin-bottom: -100px !important;
         transform: translate(400%, -100%) !important;
     }
+
+    #episode-link a {
+        font-size: .8em;
+      }
     
 }
