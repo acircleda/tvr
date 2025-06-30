@@ -223,7 +223,9 @@ main {
 
 #back a {
     text-align: center;
-    font-size: .8em;
+    font-size: .9em;
+    font-weight: bold;
+    text-decoration: none;
     color: #17456A;
     transition: color 0.3s ease; 
   }

@@ -4,7 +4,7 @@ import random
 import os
 import csv
 from openai import OpenAI
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -35,14 +35,12 @@ def index():
             reader = csv.DictReader(file)
             all_posts = list(reader)
             # Sort by file modification time (assuming files are named consistently)
-            blog_folder = os.path.join(app.root_path, 'templates', 'blog')
             for post in all_posts:
-                file_path = os.path.join(blog_folder, post['file_name'])
-                if os.path.exists(file_path):
-                    post['mod_time'] = os.path.getmtime(file_path)
-                else:
-                    post['mod_time'] = 0  # Default for missing files
-            sorted_posts = sorted(all_posts, key=lambda x: x['mod_time'], reverse=True)
+                try:
+                    post['date_generated_dt'] = datetime.fromisoformat(post['date_generated'])
+                except (KeyError, ValueError):
+                    post['date_generated_dt'] = datetime.min  # Default for missing/bad dates
+            sorted_posts = sorted(all_posts, key=lambda x: x['date_generated_dt'], reverse=True)
             recent_posts = sorted_posts[:5]
 
     return render_template('index.html', recent_posts=recent_posts)
@@ -167,6 +165,88 @@ def is_series_in_csv(series_title, prompt_type):
                 return True
     return False
 
+# Check if the series blog post is older than 30 days
+def is_series_older_than(series_title, days=30):
+    cutoff_date = datetime.now() - timedelta(days=days)
+    latest_date = None
+
+    with open(TRACK_FILE, "r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row["series_title"] == series_title:
+                try:
+                    row_date = datetime.fromisoformat(row["date_generated"])
+                    if not latest_date or row_date > latest_date:
+                        latest_date = row_date
+                except ValueError:
+                    # Skip or handle bad date format
+                    continue
+
+    if latest_date:
+        return latest_date < cutoff_date
+
+    # If no matching row found, consider it "not old" (or change to True if you want to proceed)
+    return True  # or return False depending on your needs
+
+isms = [
+    # Philosophical
+    "existentialism",
+    "absurdism",
+    "nihilism",
+    "stoicism",
+    "determinism",
+    "idealism",
+    "materialism",
+    "dualism",
+    "monism",
+    "rationalism",
+    "empiricism",
+    "utilitarianism",
+    "hedonism",
+    "pragmatism",
+    "relativism",
+    "skepticism",
+    "anarchism",
+    "humanism",
+    "structuralism",
+    "postmodernism",
+    "deconstructionism",
+    
+    # Economic/Political
+    "capitalism",
+    "socialism",
+    "communism",
+    "fascism",
+    "liberalism",
+    "neoliberalism",
+    "libertarianism",
+    "mercantilism",
+    "protectionism",
+    "monetarism",
+    "keynesianism",
+    "feudalism",
+    "globalism",
+    "colonialism",
+    "imperialism",
+    "nationalism",
+    "populism",
+    "progressivism",
+    "environmentalism",
+    "feminism",
+]
+
+def prompt_type_helper(prompt_type = 'general', series_title = 'The Office'):
+    if prompt_type == 'general':
+        return f"Write a short blog post about the TV series '{series_title}'. "
+    elif prompt_type == 'list':
+        return f"Write a blog post about the top 10 episodes of the TV series '{series_title}'. If the series has less than 10 episodes, write about the two or three best episodes."
+    elif prompt_type == 'philosophy_general':
+        return f"Write a blog post about the philosophical themes in the TV series '{series_title}'. Discuss how these themes are presented and their significance."
+    elif prompt_type == 'philosophy_random':
+        return f"Write a blog post that relates the TV series '{series_title}' to {random.choice(isms)}. Discuss how this philosophical concept is reflected in the series and its characters."
+    else:
+        raise ValueError("Invalid prompt type. Choose from 'general', 'blog', or 'philosophy'.")
+
 # Add a new entry to the CSV
 def add_to_csv(series_title, blog_title, prompt_type, image_url):
     with open(TRACK_FILE, "a", newline="", encoding="utf-8") as file:
@@ -181,21 +261,29 @@ def add_to_csv(series_title, blog_title, prompt_type, image_url):
 def generate_blog_post(api_key_tmdb, api_key_openai, prompt_type="general"):
     ensure_csv_exists()
 
+    if prompt_type == None:
+        prompt_type = random.choice(['general', 'list', 'philosophy_general', 'philosophy_random'])
+
+    print(f"Generating blog post with prompt type: {prompt_type}")
+
     # Fetch popular TV series from TMDb API
-    tmdb_url = f"https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key={api_key_tmdb}"
+    #tmdb_url = f"https://api.themoviedb.org/3/trending/tv/week?language=en-US&api_key={api_key_tmdb}"
+    tmdb_url = f"https://api.themoviedb.org/3/tv/popular?include_adult=false&language=en-US&page=1&with_original_language=en&api_key={api_key_tmdb}"
     response = requests.get(tmdb_url)
     response.raise_for_status()
     trending_series = response.json()["results"]
+    print(f"Found {len(trending_series)} trending series.")
 
     # Find a series not already in the CSV
     for series in trending_series:
         series_title = series["name"]
+        print(f"Checking series: {series_title}")
 
-        if not is_series_in_csv(series_title, prompt_type):
+        if is_series_older_than(series_title):
+            print(f"Selected series: {series_title}")
             series_overview = series["overview"]
             image_path = series.get("poster_path", "")
             image_url = f"https://image.tmdb.org/t/p/w500{image_path}" if image_path else None
-
 
             # Ask ChatGPT to generate blog post content and title
             client = OpenAI(
@@ -203,62 +291,15 @@ def generate_blog_post(api_key_tmdb, api_key_openai, prompt_type="general"):
             )
 
             prompt = (
-                f"Write a short blog post about the TV series '{series_title}'. "
+                prompt_type_helper(prompt_type, series_title) +
                 f"The post should be engaging and provide a brief overview of the show: {series_overview}. "
                 f"Also, suggest a suitable blog post title for this series. Format the response in this way:\n\n"
                 f"Title: [Insert blog title here]\n\n"
                 f"Content:\n<h2>[Insert subtitle here]</h2><p>[Insert paragraphs here]</p>"
             )
-            response =  client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": prompt}],
-            )
-            completion = response.choices[0].message.content.strip()
 
-            # Extract title and content from the response
-            title_line, content = completion.split("\n\n", 1)
-            blog_title = title_line.replace("Title: ", "").strip()
-            content = content.replace("Content:", "")
+            print(f"Generated prompt: {prompt}")
 
-            # Add series to CSV
-            add_to_csv(series_title, blog_title, prompt_type, image_url)
-
-            return series_title, blog_title, content, image_url
-
-    raise ValueError("No new trending series found for the given prompt type.")
-
-def generate_blog_post_list(api_key_tmdb, api_key_openai, prompt_type="list"):
-    ensure_csv_exists()
-
-    # Fetch popular TV series from TMDb API
-    tmdb_url = f"https://api.themoviedb.org/3/discover/tv?include_adult=false&language=en-US&page=1&sort_by=vote_average.desc&vote_count.gte=200&with_original_language=en&api_key={api_key_tmdb}"
-    response = requests.get(tmdb_url)
-    response.raise_for_status()
-    trending_series = response.json()["results"]
-
-    # Find a series not already in the CSV
-    for series in trending_series:
-        series_title = series["name"]
-
-        if not is_series_in_csv(series_title, prompt_type):
-            series_overview = series["overview"]
-            image_path = series.get("poster_path", "")
-            image_url = f"https://image.tmdb.org/t/p/w500{image_path}" if image_path else None
-
-
-            # Ask ChatGPT to generate blog post content and title
-            client = OpenAI(
-                api_key=os.environ.get("OPENAI_API_KEY")
-            )
-
-            prompt = (
-                f"Write a blog post about the top 10 episodes of the TV series '{series_title}'. If the series has less than 10 episodes, write about the two or three best episodes."
-                f"Each episode should be described in around 200 words."
-                f"Also, suggest a suitable blog post title. Format the response in this way:\n\n"
-                f"Title: [Insert blog title here]\n\n"
-                f"Content:\n<h2>[Episode title] (Season Number, Episode Number)</h2><p>[Insert paragraphs here]</p>"
-            )
-        
             response =  client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[{"role": "user", "content": prompt}],
@@ -291,7 +332,7 @@ def save_blog_post(series_title, blog_title, blog_content, image_url):
             <div id="content-wrapper">
                 {{% include 'logo.html' %}}
                 <div id="blog-body">
-    <div id="back"><a href="/">< Back</a></div>      
+    <div id="back"><a href="/">&larr; Back</a></div>      
     <h1>{blog_title}</h1>
     {'<img src="' + image_url + '" alt="' + series_title + ' poster" />' if image_url else ''}
 
@@ -323,27 +364,27 @@ def save_blog_post(series_title, blog_title, blog_content, image_url):
 @app.route('/create_blogpost', methods=['GET'])
 def create_blogpost():
     prompt_type = request.args.get('prompt')
-
-    if prompt_type == 'list':
-        series_title, blog_title, blog_content, image_url = generate_blog_post_list(api_key_tmdb, api_key_openai)
-    else:
-        series_title, blog_title, blog_content, image_url = generate_blog_post(api_key_tmdb, api_key_openai)
+    series_title, blog_title, blog_content, image_url = generate_blog_post(api_key_tmdb, api_key_openai, prompt_type)
 
     # Save blog post
     save_blog_post(series_title, blog_title, blog_content, image_url)
-
-    # Redirect to the blog list page
-    return redirect(url_for('list_blogs'))
+    print(f"Blog post created for series: {series_title}")
+    return jsonify({'status': 'success'}), 200
 
 @app.route('/blog')
 def list_blogs():
-    import os
-    blog_dir = os.path.join(BASE_DIR, "templates", "blog")
 
-    # Get all blog filenames
-    blogs = []
-    if os.path.exists(blog_dir):
-        blogs = [f for f in os.listdir(blog_dir) if f.endswith('.html')]
+    with open(TRACK_FILE, mode='r') as file:
+        reader = csv.DictReader(file)
+        all_posts = list(reader)
+        # Sort by file modification time (assuming files are named consistently)
+        for post in all_posts:
+            try:
+                post['date_generated_dt'] = datetime.fromisoformat(post['date_generated'])
+            except (KeyError, ValueError):
+                post['date_generated_dt'] = datetime.min  # Default for missing/bad dates
+        sorted_posts = sorted(all_posts, key=lambda x: x['date_generated_dt'], reverse=True)
+        blogs = sorted(sorted_posts, key=lambda x: x['date_generated_dt'], reverse=True)
 
     return render_template('blogs.html', blogs=blogs)
 
